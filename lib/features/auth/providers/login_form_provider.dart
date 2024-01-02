@@ -1,6 +1,9 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:formz/formz.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
 import 'package:teslo_shop/features/shared/shared.dart';
+import 'package:formz/formz.dart';
+
+part 'login_form_provider.g.dart';
 
 class LoginFormState {
   final bool isPosting;
@@ -45,8 +48,12 @@ class LoginFormState {
   }
 }
 
-class LoginFormNotifier extends StateNotifier<LoginFormState> {
-  LoginFormNotifier() : super(LoginFormState());
+@riverpod
+class LoginForm extends _$LoginForm {
+  @override
+  LoginFormState build() {
+    return LoginFormState();
+  }
 
   onEmailChange(String value) {
     final newEmail = Email.dirty(value);
@@ -91,7 +98,55 @@ class LoginFormNotifier extends StateNotifier<LoginFormState> {
   }
 }
 
-final LoginFormProvider =
-    StateNotifierProvider.autoDispose<LoginFormNotifier, LoginFormState>((ref) {
-  return LoginFormNotifier();
-});
+
+
+// class LoginFormNotifier extends StateNotifier<LoginFormState> {
+//   LoginFormNotifier() : super(LoginFormState());
+
+//   onEmailChange(String value) {
+//     final newEmail = Email.dirty(value);
+//     state = state.copyWith(
+//       email: newEmail,
+//       isValid: Formz.validate(
+//         [newEmail, state.password],
+//       ),
+//     );
+//   }
+
+//   onPasswordChange(String value) {
+//     final newPassword = Password.dirty(value);
+//     state = state.copyWith(
+//       password: newPassword,
+//       isValid: Formz.validate(
+//         [state.email, newPassword],
+//       ),
+//     );
+//   }
+
+//   onFormSubmit() {
+//     _touchEveryField();
+
+//     if (!state.isValid) return;
+
+//     print(state);
+//   }
+
+//   _touchEveryField() {
+//     final email = Email.dirty(state.email.value);
+//     final password = Password.dirty(state.password.value);
+
+//     state = state.copyWith(
+//       email: email,
+//       password: password,
+//       isFormPosted: true,
+//       isValid: Formz.validate(
+//         [email, password],
+//       ),
+//     );
+//   }
+// }
+
+// final LoginFormProvider =
+//     StateNotifierProvider.autoDispose<LoginFormNotifier, LoginFormState>((ref) {
+//   return LoginFormNotifier();
+// });
