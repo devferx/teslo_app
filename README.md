@@ -16,3 +16,9 @@ Este es un proyecto para trabajar con:
 # Importante
 Recuerden leer y seguir la guía para montar el backend localmente.
 
+## Para correr el proyecto
+
+Comando para autogenerar el código de riverpod
+```
+dart run build_runner watch
+```
