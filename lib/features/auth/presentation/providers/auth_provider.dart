@@ -46,6 +46,7 @@ class Auth extends _$Auth {
 
   @override
   AuthState build() {
+    checkAuthStatus();
     return AuthState();
   }
 
@@ -64,7 +65,18 @@ class Auth extends _$Auth {
 
   void registerUser(String email, String password) async {}
 
-  void checkAuthStatus() async {}
+  void checkAuthStatus() async {
+    final token = await _keyValueStorageService.getValue<String>('token');
+
+    if (token == null) return logout();
+
+    try {
+      final user = await _authRepository.checkAuthStatus(token);
+      _setLoggedUser(user);
+    } catch (e) {
+      logout();
+    }
+  }
 
   Future<void> logout([String? errorMessage]) async {
     await _keyValueStorageService.removeKey('token');
