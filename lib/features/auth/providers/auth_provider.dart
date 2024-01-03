@@ -43,7 +43,7 @@ class Auth extends _$Auth {
     return AuthState();
   }
 
-  void loginUser(String email, String password) async {
+  Future<void> loginUser(String email, String password) async {
     await Future.delayed(const Duration(milliseconds: 500));
 
     try {
