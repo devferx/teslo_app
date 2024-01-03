@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:teslo_shop/features/auth/domain/domain.dart';
@@ -51,6 +53,8 @@ class Auth extends _$Auth {
       _setLoggedUser(user);
     } on WrongCredentials {
       logout('Credenciales no son correctas');
+    } on TimeoutException {
+      logout('Timeout');
     } catch (e) {
       logout('Error no controlado');
     }
