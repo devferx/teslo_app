@@ -1,15 +1,15 @@
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:teslo_shop/config/router/app_router_notifier.dart';
 import 'package:teslo_shop/features/auth/auth.dart';
 import 'package:teslo_shop/features/products/products.dart';
 
-part 'app_router.g.dart';
+final goRouterProvider = Provider((ref) {
+  final goRouterNotifier = ref.read(goRouterNotifierProvider);
 
-@riverpod
-// ignore: unsupported_provider_value
-GoRouter appRouter(AppRouterRef ref) {
   return GoRouter(
-    initialLocation: '/splash',
+    initialLocation: '/login',
+    refreshListenable: goRouterNotifier,
     routes: [
       ///* First Screen
       GoRoute(
@@ -34,8 +34,8 @@ GoRouter appRouter(AppRouterRef ref) {
       ),
     ],
     redirect: (context, state) {
-      print(state);
+      print(state.subloc);
       return null;
     },
   );
-}
+});
