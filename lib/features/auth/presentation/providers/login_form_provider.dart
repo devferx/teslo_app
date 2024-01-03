@@ -1,11 +1,9 @@
-import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:formz/formz.dart';
 
 import 'package:teslo_shop/features/shared/shared.dart';
 
 import 'auth_provider.dart';
-
-part 'login_form_provider.g.dart';
 
 class LoginFormState {
   final bool isPosting;
@@ -50,12 +48,19 @@ class LoginFormState {
   }
 }
 
-@riverpod
-class LoginForm extends _$LoginForm {
-  @override
-  LoginFormState build() {
-    return LoginFormState();
-  }
+final loginFormProvider =
+    StateNotifierProvider.autoDispose<LoginFormNotifier, LoginFormState>((ref) {
+  final loginUserCallback = ref.watch(authProvider.notifier).loginUser;
+
+  return LoginFormNotifier(loginUserCallback: loginUserCallback);
+});
+
+class LoginFormNotifier extends StateNotifier<LoginFormState> {
+  final Function(String, String) loginUserCallback;
+
+  LoginFormNotifier({
+    required this.loginUserCallback,
+  }) : super(LoginFormState());
 
   onEmailChange(String value) {
     final newEmail = Email.dirty(value);
@@ -82,11 +87,14 @@ class LoginForm extends _$LoginForm {
 
     if (!state.isValid) return;
 
-    print(state);
-    await ref.watch(authProvider.notifier).loginUser(
-          state.email.value,
-          state.password.value,
-        );
+    state = state.copyWith(isPosting: true);
+
+    await loginUserCallback(
+      state.email.value,
+      state.password.value,
+    );
+
+    state = state.copyWith(isPosting: false);
   }
 
   _touchEveryField() {
