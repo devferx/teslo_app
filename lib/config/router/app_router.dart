@@ -1,32 +1,41 @@
 import 'package:go_router/go_router.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:teslo_shop/features/auth/auth.dart';
 import 'package:teslo_shop/features/products/products.dart';
 
-final appRouter = GoRouter(
-  initialLocation: '/splash',
-  routes: [
-    ///* First Screen
-    GoRoute(
-      path: '/splash',
-      builder: (context, state) => const CheckAuthStatusScreen(),
-    ),
+part 'app_router.g.dart';
 
-    ///* Auth Routes
-    GoRoute(
-      path: '/login',
-      builder: (context, state) => const LoginScreen(),
-    ),
-    GoRoute(
-      path: '/register',
-      builder: (context, state) => const RegisterScreen(),
-    ),
+@riverpod
+// ignore: unsupported_provider_value
+GoRouter appRouter(AppRouterRef ref) {
+  return GoRouter(
+    initialLocation: '/splash',
+    routes: [
+      ///* First Screen
+      GoRoute(
+        path: '/splash',
+        builder: (context, state) => const CheckAuthStatusScreen(),
+      ),
 
-    ///* Product Routes
-    GoRoute(
-      path: '/',
-      builder: (context, state) => const ProductsScreen(),
-    ),
-  ],
+      ///* Auth Routes
+      GoRoute(
+        path: '/login',
+        builder: (context, state) => const LoginScreen(),
+      ),
+      GoRoute(
+        path: '/register',
+        builder: (context, state) => const RegisterScreen(),
+      ),
 
-  ///! TODO: Bloquear si no se está autenticado de alguna manera
-);
+      ///* Product Routes
+      GoRoute(
+        path: '/',
+        builder: (context, state) => const ProductsScreen(),
+      ),
+    ],
+    redirect: (context, state) {
+      print(state);
+      return null;
+    },
+  );
+}
