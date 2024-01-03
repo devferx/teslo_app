@@ -25,14 +25,16 @@ class AuthDataSourceImpl extends AuthDataSource {
 
       return user;
     } on DioException catch (e) {
-      if (e.response?.statusCode == 401) throw WrongCredentials();
+      if (e.response?.statusCode == 401) {
+        throw CustomError(e.response?.data['message'] ?? 'Invalid credentials');
+      }
       if (e.type == DioExceptionType.connectionTimeout) {
-        throw ConnectionTimeout();
+        throw CustomError('Connection timeout');
       }
 
-      throw CustomError('Something went wrong', 1);
+      throw Exception();
     } catch (e) {
-      throw CustomError('Something went wrong', 1);
+      throw Exception();
     }
   }
 

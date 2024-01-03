@@ -51,10 +51,8 @@ class Auth extends _$Auth {
     try {
       final user = await _authRepository.login(email, password);
       _setLoggedUser(user);
-    } on WrongCredentials {
-      logout('Credenciales no son correctas');
-    } on TimeoutException {
-      logout('Timeout');
+    } on CustomError catch (e) {
+      logout(e.message);
     } catch (e) {
       logout('Error no controlado');
     }
@@ -78,6 +76,7 @@ class Auth extends _$Auth {
     state = state.copyWith(
       authStatus: AuthStatus.authenticated,
       user: user,
+      errorMessage: '',
     );
   }
 }
