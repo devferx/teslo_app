@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:teslo_shop/features/products/domain/domain.dart';
-import 'package:teslo_shop/features/products/domain/entities/product.dart';
+import 'package:teslo_shop/features/products/presentation/providers/providers.dart';
 
 class ProductsState {
   final bool isLastPage;
@@ -67,6 +68,9 @@ class ProductsNotifier extends StateNotifier<ProductsState> {
   }
 }
 
-// final productsProvider = StateNotifierProvider<>((ref) {
-//   return 
-// });
+final productsProvider =
+    StateNotifierProvider<ProductsNotifier, ProductsState>((ref) {
+  final productsRepository = ref.watch(productsRepositoryProvider);
+
+  return ProductsNotifier(productsRepository: productsRepository);
+});
