@@ -4,6 +4,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:teslo_shop/features/auth/domain/domain.dart';
 import 'package:teslo_shop/features/auth/infrastructure/infrastructure.dart';
+import 'package:teslo_shop/features/shared/infrastructure/services/key_value_storage_service.dart';
+import 'package:teslo_shop/features/shared/infrastructure/services/key_value_storage_service_impl.dart';
 
 part 'auth_provider.g.dart';
 
@@ -39,6 +41,8 @@ class AuthState {
 @riverpod
 class Auth extends _$Auth {
   final AuthRepository _authRepository = AuthRepositoryImpl();
+  final KeyValueStorageService _keyValueStorageService =
+      KeyValueStorageServiceImpl();
 
   @override
   AuthState build() {
@@ -63,7 +67,8 @@ class Auth extends _$Auth {
   void checkAuthStatus() async {}
 
   Future<void> logout([String? errorMessage]) async {
-    // TODO: remove the token
+    await _keyValueStorageService.removeKey('token');
+
     state = state.copyWith(
       authStatus: AuthStatus.notAuthenticated,
       user: null,
@@ -71,8 +76,9 @@ class Auth extends _$Auth {
     );
   }
 
-  void _setLoggedUser(User user) {
-    // TODO: save the token
+  void _setLoggedUser(User user) async {
+    await _keyValueStorageService.setKeyValue('token', user.token);
+
     state = state.copyWith(
       authStatus: AuthStatus.authenticated,
       user: user,
