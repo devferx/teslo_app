@@ -6,7 +6,7 @@ part of 'product_form_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$productFormHash() => r'b566647944b21f1cc0e6626b7721f9d02f85391c';
+String _$productFormHash() => r'0ef6c86bd557e5975a3bdab5bc5b4d2c15f129bb';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -32,11 +32,11 @@ class _SystemHash {
 abstract class _$ProductForm
     extends BuildlessAutoDisposeNotifier<ProductFormState> {
   late final Product product;
-  late final void Function(Map<String, dynamic>) onSubmitCallback;
+  late final void Function(Map<String, dynamic>)? onSubmitCallback;
 
   ProductFormState build({
     required Product product,
-    required void Function(Map<String, dynamic>) onSubmitCallback,
+    required void Function(Map<String, dynamic>)? onSubmitCallback,
   });
 }
 
@@ -52,7 +52,7 @@ class ProductFormFamily extends Family<ProductFormState> {
   /// See also [ProductForm].
   ProductFormProvider call({
     required Product product,
-    required void Function(Map<String, dynamic>) onSubmitCallback,
+    required void Function(Map<String, dynamic>)? onSubmitCallback,
   }) {
     return ProductFormProvider(
       product: product,
@@ -91,7 +91,7 @@ class ProductFormProvider
   /// See also [ProductForm].
   ProductFormProvider({
     required Product product,
-    required void Function(Map<String, dynamic>) onSubmitCallback,
+    required void Function(Map<String, dynamic>)? onSubmitCallback,
   }) : this._internal(
           () => ProductForm()
             ..product = product
@@ -121,7 +121,7 @@ class ProductFormProvider
   }) : super.internal();
 
   final Product product;
-  final void Function(Map<String, dynamic>) onSubmitCallback;
+  final void Function(Map<String, dynamic>)? onSubmitCallback;
 
   @override
   ProductFormState runNotifierBuild(
@@ -180,7 +180,7 @@ mixin ProductFormRef on AutoDisposeNotifierProviderRef<ProductFormState> {
   Product get product;
 
   /// The parameter `onSubmitCallback` of this provider.
-  void Function(Map<String, dynamic>) get onSubmitCallback;
+  void Function(Map<String, dynamic>)? get onSubmitCallback;
 }
 
 class _ProductFormProviderElement
@@ -191,7 +191,7 @@ class _ProductFormProviderElement
   @override
   Product get product => (origin as ProductFormProvider).product;
   @override
-  void Function(Map<String, dynamic>) get onSubmitCallback =>
+  void Function(Map<String, dynamic>)? get onSubmitCallback =>
       (origin as ProductFormProvider).onSubmitCallback;
 }
 // ignore_for_file: type=lint

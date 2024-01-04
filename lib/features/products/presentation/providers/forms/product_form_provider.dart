@@ -1,5 +1,6 @@
 import 'package:formz/formz.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:teslo_shop/config/config.dart';
 import 'package:teslo_shop/features/products/domain/domain.dart';
 import 'package:teslo_shop/features/shared/infrastructure/inputs/inputs.dart';
 
@@ -67,7 +68,7 @@ class ProductForm extends _$ProductForm {
   @override
   ProductFormState build({
     required Product product,
-    required ProductFormSubmitter onSubmitCallback,
+    required ProductFormSubmitter? onSubmitCallback,
   }) {
     return ProductFormState(
       id: product.id,
@@ -80,6 +81,45 @@ class ProductForm extends _$ProductForm {
       description: product.description,
       tags: product.tags.join(", "),
       images: product.images,
+    );
+  }
+
+  Future<bool> onFormSubmit() async {
+    _touchedEverything();
+    if (!state.isFormValid) return false;
+
+    if (onSubmitCallback == null) return false;
+
+    final productLike = {
+      'id': state.id,
+      'title': state.title.value,
+      'price': state.price.value,
+      'description': state.description,
+      'slug': state.slug.value,
+      'stock': state.inStock.value,
+      'sizes': state.sizes,
+      'gender': state.gender,
+      'tags': state.tags.split(", "),
+      'images': state.images
+          .map((img) => img.replaceAll(
+                '${Environment.apiURl}/files/product/',
+                '',
+              ))
+          .toList()
+    };
+
+    return true;
+    // TODO: Call the callback
+  }
+
+  void _touchedEverything() {
+    state = state.copyWith(
+      isFormValid: Formz.validate([
+        Title.dirty(state.title.value),
+        Slug.dirty(state.slug.value),
+        Price.dirty(state.price.value),
+        Stock.dirty(state.inStock.value),
+      ]),
     );
   }
 
@@ -128,6 +168,30 @@ class ProductForm extends _$ProductForm {
         Slug.dirty(state.slug.value),
         Price.dirty(state.price.value),
       ]),
+    );
+  }
+
+  void onSizedChanged(List<String> sizes) {
+    state = state.copyWith(
+      sizes: sizes,
+    );
+  }
+
+  void onGenderChanged(String gender) {
+    state = state.copyWith(
+      gender: gender,
+    );
+  }
+
+  void onDescriptionChanged(String description) {
+    state = state.copyWith(
+      gender: description,
+    );
+  }
+
+  void onTagsChanged(String tags) {
+    state = state.copyWith(
+      tags: tags,
     );
   }
 }
