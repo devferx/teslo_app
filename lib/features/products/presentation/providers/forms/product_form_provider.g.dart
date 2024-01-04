@@ -6,7 +6,7 @@ part of 'product_form_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$productFormHash() => r'8771425c19b3d74e2e5a7d4edaa3faba7235db0d';
+String _$productFormHash() => r'418ba9f9207f84a6dc8acf52eaa80b6bb0225357';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -33,9 +33,9 @@ abstract class _$ProductForm
     extends BuildlessAutoDisposeNotifier<ProductFormState> {
   late final Product product;
 
-  ProductFormState build({
-    required Product product,
-  });
+  ProductFormState build(
+    Product product,
+  );
 }
 
 /// See also [ProductForm].
@@ -48,11 +48,11 @@ class ProductFormFamily extends Family<ProductFormState> {
   const ProductFormFamily();
 
   /// See also [ProductForm].
-  ProductFormProvider call({
-    required Product product,
-  }) {
+  ProductFormProvider call(
+    Product product,
+  ) {
     return ProductFormProvider(
-      product: product,
+      product,
     );
   }
 
@@ -61,7 +61,7 @@ class ProductFormFamily extends Family<ProductFormState> {
     covariant ProductFormProvider provider,
   ) {
     return call(
-      product: provider.product,
+      provider.product,
     );
   }
 
@@ -84,9 +84,9 @@ class ProductFormFamily extends Family<ProductFormState> {
 class ProductFormProvider
     extends AutoDisposeNotifierProviderImpl<ProductForm, ProductFormState> {
   /// See also [ProductForm].
-  ProductFormProvider({
-    required Product product,
-  }) : this._internal(
+  ProductFormProvider(
+    Product product,
+  ) : this._internal(
           () => ProductForm()..product = product,
           from: productFormProvider,
           name: r'productFormProvider',
@@ -117,7 +117,7 @@ class ProductFormProvider
     covariant ProductForm notifier,
   ) {
     return notifier.build(
-      product: product,
+      product,
     );
   }
 

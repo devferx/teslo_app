@@ -66,10 +66,10 @@ typedef ProductFormSubmitter = void Function(Map<String, dynamic> productLike);
 @riverpod
 class ProductForm extends _$ProductForm {
   @override
-  ProductFormState build({
-    required Product product,
+  ProductFormState build(
+    Product product,
     // required ProductFormSubmitter? onSubmitCallback,
-  }) {
+  ) {
     return ProductFormState(
       id: product.id,
       title: Title.dirty(product.title),
