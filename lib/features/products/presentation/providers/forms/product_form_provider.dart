@@ -1,6 +1,9 @@
+import 'package:formz/formz.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:teslo_shop/features/products/domain/domain.dart';
 import 'package:teslo_shop/features/shared/infrastructure/inputs/inputs.dart';
 
-// part 'product_form_provider.dart';
+part 'product_form_provider.g.dart';
 
 class ProductFormState {
   final bool isFormValid;
@@ -55,4 +58,76 @@ class ProductFormState {
         tags: tags ?? this.tags,
         images: images ?? this.images,
       );
+}
+
+typedef ProductFormSubmitter = void Function(Map<String, dynamic> productLike);
+
+@riverpod
+class ProductForm extends _$ProductForm {
+  @override
+  ProductFormState build({
+    required Product product,
+    required ProductFormSubmitter onSubmitCallback,
+  }) {
+    return ProductFormState(
+      id: product.id,
+      title: Title.dirty(product.title),
+      slug: Slug.dirty(product.slug),
+      price: Price.dirty(product.price),
+      inStock: Stock.dirty(product.stock),
+      sizes: product.sizes,
+      gender: product.gender,
+      description: product.description,
+      tags: product.tags.join(", "),
+      images: product.images,
+    );
+  }
+
+  void onTitleChanged(String value) {
+    state = state.copyWith(
+      title: Title.dirty(value),
+      isFormValid: Formz.validate([
+        Title.dirty(value),
+        Slug.dirty(state.slug.value),
+        Price.dirty(state.price.value),
+        Stock.dirty(state.inStock.value),
+      ]),
+    );
+  }
+
+  void onSlugChanged(String value) {
+    state = state.copyWith(
+      slug: Slug.dirty(value),
+      isFormValid: Formz.validate([
+        Slug.dirty(value),
+        Title.dirty(state.title.value),
+        Price.dirty(state.price.value),
+        Stock.dirty(state.inStock.value),
+      ]),
+    );
+  }
+
+  void onPriceChanged(double value) {
+    state = state.copyWith(
+      price: Price.dirty(value),
+      isFormValid: Formz.validate([
+        Price.dirty(value),
+        Title.dirty(state.title.value),
+        Slug.dirty(state.slug.value),
+        Stock.dirty(state.inStock.value),
+      ]),
+    );
+  }
+
+  void onStockChanged(int value) {
+    state = state.copyWith(
+      inStock: Stock.dirty(value),
+      isFormValid: Formz.validate([
+        Stock.dirty(value),
+        Title.dirty(state.title.value),
+        Slug.dirty(state.slug.value),
+        Price.dirty(state.price.value),
+      ]),
+    );
+  }
 }
