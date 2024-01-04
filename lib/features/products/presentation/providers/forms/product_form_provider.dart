@@ -68,7 +68,7 @@ class ProductForm extends _$ProductForm {
   @override
   ProductFormState build({
     required Product product,
-    required ProductFormSubmitter? onSubmitCallback,
+    // required ProductFormSubmitter? onSubmitCallback,
   }) {
     return ProductFormState(
       id: product.id,
@@ -88,7 +88,7 @@ class ProductForm extends _$ProductForm {
     _touchedEverything();
     if (!state.isFormValid) return false;
 
-    if (onSubmitCallback == null) return false;
+    // if (onSubmitCallback == null) return false;
 
     final productLike = {
       'id': state.id,

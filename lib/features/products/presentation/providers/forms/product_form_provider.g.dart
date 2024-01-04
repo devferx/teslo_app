@@ -6,7 +6,7 @@ part of 'product_form_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$productFormHash() => r'0ef6c86bd557e5975a3bdab5bc5b4d2c15f129bb';
+String _$productFormHash() => r'8771425c19b3d74e2e5a7d4edaa3faba7235db0d';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -32,11 +32,9 @@ class _SystemHash {
 abstract class _$ProductForm
     extends BuildlessAutoDisposeNotifier<ProductFormState> {
   late final Product product;
-  late final void Function(Map<String, dynamic>)? onSubmitCallback;
 
   ProductFormState build({
     required Product product,
-    required void Function(Map<String, dynamic>)? onSubmitCallback,
   });
 }
 
@@ -52,11 +50,9 @@ class ProductFormFamily extends Family<ProductFormState> {
   /// See also [ProductForm].
   ProductFormProvider call({
     required Product product,
-    required void Function(Map<String, dynamic>)? onSubmitCallback,
   }) {
     return ProductFormProvider(
       product: product,
-      onSubmitCallback: onSubmitCallback,
     );
   }
 
@@ -66,7 +62,6 @@ class ProductFormFamily extends Family<ProductFormState> {
   ) {
     return call(
       product: provider.product,
-      onSubmitCallback: provider.onSubmitCallback,
     );
   }
 
@@ -91,11 +86,8 @@ class ProductFormProvider
   /// See also [ProductForm].
   ProductFormProvider({
     required Product product,
-    required void Function(Map<String, dynamic>)? onSubmitCallback,
   }) : this._internal(
-          () => ProductForm()
-            ..product = product
-            ..onSubmitCallback = onSubmitCallback,
+          () => ProductForm()..product = product,
           from: productFormProvider,
           name: r'productFormProvider',
           debugGetCreateSourceHash:
@@ -106,7 +98,6 @@ class ProductFormProvider
           allTransitiveDependencies:
               ProductFormFamily._allTransitiveDependencies,
           product: product,
-          onSubmitCallback: onSubmitCallback,
         );
 
   ProductFormProvider._internal(
@@ -117,11 +108,9 @@ class ProductFormProvider
     required super.debugGetCreateSourceHash,
     required super.from,
     required this.product,
-    required this.onSubmitCallback,
   }) : super.internal();
 
   final Product product;
-  final void Function(Map<String, dynamic>)? onSubmitCallback;
 
   @override
   ProductFormState runNotifierBuild(
@@ -129,7 +118,6 @@ class ProductFormProvider
   ) {
     return notifier.build(
       product: product,
-      onSubmitCallback: onSubmitCallback,
     );
   }
 
@@ -138,16 +126,13 @@ class ProductFormProvider
     return ProviderOverride(
       origin: this,
       override: ProductFormProvider._internal(
-        () => create()
-          ..product = product
-          ..onSubmitCallback = onSubmitCallback,
+        () => create()..product = product,
         from: from,
         name: null,
         dependencies: null,
         allTransitiveDependencies: null,
         debugGetCreateSourceHash: null,
         product: product,
-        onSubmitCallback: onSubmitCallback,
       ),
     );
   }
@@ -160,16 +145,13 @@ class ProductFormProvider
 
   @override
   bool operator ==(Object other) {
-    return other is ProductFormProvider &&
-        other.product == product &&
-        other.onSubmitCallback == onSubmitCallback;
+    return other is ProductFormProvider && other.product == product;
   }
 
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
     hash = _SystemHash.combine(hash, product.hashCode);
-    hash = _SystemHash.combine(hash, onSubmitCallback.hashCode);
 
     return _SystemHash.finish(hash);
   }
@@ -178,9 +160,6 @@ class ProductFormProvider
 mixin ProductFormRef on AutoDisposeNotifierProviderRef<ProductFormState> {
   /// The parameter `product` of this provider.
   Product get product;
-
-  /// The parameter `onSubmitCallback` of this provider.
-  void Function(Map<String, dynamic>)? get onSubmitCallback;
 }
 
 class _ProductFormProviderElement
@@ -190,9 +169,6 @@ class _ProductFormProviderElement
 
   @override
   Product get product => (origin as ProductFormProvider).product;
-  @override
-  void Function(Map<String, dynamic>)? get onSubmitCallback =>
-      (origin as ProductFormProvider).onSubmitCallback;
 }
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
