@@ -1,28 +1,30 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:teslo_shop/features/products/domain/domain.dart';
 import 'package:teslo_shop/features/products/presentation/providers/providers.dart';
 
-class ProductState {
+part 'single_product_provider.g.dart';
+
+class SingleProductState {
   final String id;
   final Product? product;
   final bool isLoading;
   final bool isSaving;
 
-  ProductState({
+  SingleProductState({
     required this.id,
     this.product,
     this.isLoading = true,
     this.isSaving = false,
   });
 
-  ProductState copyWith({
+  SingleProductState copyWith({
     String? id,
     Product? product,
     bool? isLoading,
     bool? isSaving,
   }) {
-    return ProductState(
+    return SingleProductState(
       id: id ?? this.id,
       product: product ?? this.product,
       isLoading: isLoading ?? this.isLoading,
@@ -31,19 +33,20 @@ class ProductState {
   }
 }
 
-class ProductNotifier extends StateNotifier<ProductState> {
-  final ProductsRepository productsRepository;
-
-  ProductNotifier({
-    required this.productsRepository,
-    required String productId,
-  }) : super(ProductState(id: productId)) {
+@riverpod
+class SingleProduct extends _$SingleProduct {
+  late ProductsRepository _productsRepository;
+  @override
+  SingleProductState build(String productId) {
+    _productsRepository = ref.watch(productsRepositoryProvider);
+    state = SingleProductState(id: productId);
     loadProduct();
+    return state;
   }
 
   Future<void> loadProduct() async {
     try {
-      final product = await productsRepository.getProductById(state.id);
+      final product = await _productsRepository.getProductById(state.id);
       state = state.copyWith(
         isLoading: false,
         product: product,
@@ -53,13 +56,3 @@ class ProductNotifier extends StateNotifier<ProductState> {
     }
   }
 }
-
-final productProvider = StateNotifierProvider.autoDispose
-    .family<ProductNotifier, ProductState, String>((ref, productId) {
-  final productsRepository = ref.watch(productsRepositoryProvider);
-
-  return ProductNotifier(
-    productsRepository: productsRepository,
-    productId: productId,
-  );
-});

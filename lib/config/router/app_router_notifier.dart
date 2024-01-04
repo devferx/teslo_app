@@ -1,21 +1,25 @@
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
 import 'package:flutter/widgets.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../features/auth/presentation/providers/auth_provider.dart';
 
-final goRouterNotifierProvider = Provider((ref) {
-  final authNotifier = ref.read(authProvider.notifier);
-  return GoRouterNotifier(authNotifier);
-});
+part 'app_router_notifier.g.dart';
+
+@Riverpod(keepAlive: true)
+Raw<GoRouterNotifier> goRouterNotifier(GoRouterNotifierRef ref) {
+  return GoRouterNotifier(ref);
+}
 
 class GoRouterNotifier extends ChangeNotifier {
-  final AuthNotifier _authNotifier;
-
   AuthStatus _authStatus = AuthStatus.checking;
 
-  GoRouterNotifier(this._authNotifier) {
-    _authNotifier.addListener((state) {
-      authStatus = state.authStatus;
+  GoRouterNotifier(GoRouterNotifierRef ref) {
+    ref.listen(authProvider, (previous, next) {
+      if (next.authStatus != _authStatus) {
+        _authStatus = next.authStatus;
+        notifyListeners();
+      }
     });
   }
 

@@ -6,7 +6,10 @@ import 'package:teslo_shop/features/auth/auth.dart';
 import 'package:teslo_shop/features/auth/presentation/providers/auth_provider.dart';
 import 'package:teslo_shop/features/products/products.dart';
 
-final goRouterProvider = Provider((ref) {
+part 'app_router.g.dart';
+
+@riverpod
+Raw<GoRouter> goRouter(GoRouterRef ref) {
   final goRouterNotifier = ref.read(goRouterNotifierProvider);
 
   return GoRouter(
@@ -68,4 +71,4 @@ final goRouterProvider = Provider((ref) {
       return null;
     },
   );
-});
+}

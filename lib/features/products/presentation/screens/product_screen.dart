@@ -12,7 +12,7 @@ class ProductScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final productState = ref.watch(productProvider(productId));
+    final productState = ref.watch(singleProductProvider(productId));
 
     return Scaffold(
       appBar: AppBar(
