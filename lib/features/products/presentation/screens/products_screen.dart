@@ -44,8 +44,16 @@ class _ProductsViewState extends ConsumerState<_ProductsView> {
   @override
   void initState() {
     super.initState();
-    // TODO: Inifinite scroll
     ref.read(productsProvider.notifier).loadNextPage();
+
+    scrollController.addListener(() {
+      final currentPos = scrollController.position.pixels;
+      final maxPos = scrollController.position.maxScrollExtent;
+
+      if (currentPos + 200 >= maxPos) {
+        ref.read(productsProvider.notifier).loadNextPage();
+      }
+    });
   }
 
   @override
@@ -58,17 +66,19 @@ class _ProductsViewState extends ConsumerState<_ProductsView> {
   Widget build(BuildContext context) {
     final productsState = ref.watch(productsProvider);
     return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-        child: MasonryGridView.count(
-          physics: const BouncingScrollPhysics(),
-          crossAxisCount: 2,
-          mainAxisSpacing: 20,
-          crossAxisSpacing: 35,
-          itemCount: productsState.products.length,
-          itemBuilder: (context, index) {
-            final product = productsState.products[index];
-            return ProductCard(product: product);
-          },
-        ));
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      child: MasonryGridView.count(
+        controller: scrollController,
+        physics: const BouncingScrollPhysics(),
+        crossAxisCount: 2,
+        mainAxisSpacing: 20,
+        crossAxisSpacing: 35,
+        itemCount: productsState.products.length,
+        itemBuilder: (context, index) {
+          final product = productsState.products[index];
+          return ProductCard(product: product);
+        },
+      ),
+    );
   }
 }
