@@ -2,6 +2,7 @@ import 'package:formz/formz.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:teslo_shop/config/config.dart';
 import 'package:teslo_shop/features/products/domain/domain.dart';
+import 'package:teslo_shop/features/products/presentation/providers/providers.dart';
 import 'package:teslo_shop/features/shared/infrastructure/inputs/inputs.dart';
 
 part 'product_form_provider.g.dart';
@@ -61,15 +62,18 @@ class ProductFormState {
       );
 }
 
-typedef ProductFormSubmitter = void Function(Map<String, dynamic> productLike);
+typedef ProductFormSubmitter = Future<Product> Function(
+    Map<String, dynamic> productLike);
 
 @riverpod
 class ProductForm extends _$ProductForm {
+  late ProductFormSubmitter _onSubmitCallback;
+
   @override
-  ProductFormState build(
-    Product product,
-    // required ProductFormSubmitter? onSubmitCallback,
-  ) {
+  ProductFormState build(Product product) {
+    _onSubmitCallback =
+        ref.watch(productsRepositoryProvider).createUpdateProduct;
+
     return ProductFormState(
       id: product.id,
       title: Title.dirty(product.title),
@@ -87,8 +91,6 @@ class ProductForm extends _$ProductForm {
   Future<bool> onFormSubmit() async {
     _touchedEverything();
     if (!state.isFormValid) return false;
-
-    // if (onSubmitCallback == null) return false;
 
     final productLike = {
       'id': state.id,
@@ -108,8 +110,12 @@ class ProductForm extends _$ProductForm {
           .toList()
     };
 
-    return true;
-    // TODO: Call the callback
+    try {
+      await _onSubmitCallback(productLike);
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
   void _touchedEverything() {
