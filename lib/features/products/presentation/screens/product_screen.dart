@@ -10,6 +10,16 @@ class ProductScreen extends ConsumerWidget {
 
   const ProductScreen({super.key, required this.productId});
 
+  void showSnackBar(BuildContext context) {
+    ScaffoldMessenger.of(context).clearSnackBars();
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text("Producto guardado!"),
+        duration: Duration(seconds: 1),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final productState = ref.watch(singleProductProvider(productId));
@@ -27,7 +37,13 @@ class ProductScreen extends ConsumerWidget {
 
           ref
               .read(productFormProvider(productState.product!).notifier)
-              .onFormSubmit();
+              .onFormSubmit()
+              .then(
+            (value) {
+              if (!value) return;
+              showSnackBar(context);
+            },
+          );
         },
         child: const Icon(Icons.save_as_outlined),
       ),
