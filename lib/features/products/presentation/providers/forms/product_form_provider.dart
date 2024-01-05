@@ -94,7 +94,7 @@ class ProductForm extends _$ProductForm {
     if (!state.isFormValid) return false;
 
     final productLike = {
-      'id': state.id,
+      'id': state.id == 'new' ? null : state.id,
       'title': state.title.value,
       'price': state.price.value,
       'description': state.description,
@@ -191,7 +191,7 @@ class ProductForm extends _$ProductForm {
 
   void onDescriptionChanged(String description) {
     state = state.copyWith(
-      gender: description,
+      description: description,
     );
   }
 
