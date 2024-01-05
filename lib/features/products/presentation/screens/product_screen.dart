@@ -29,6 +29,25 @@ class ProductScreen extends ConsumerWidget {
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Edit Product'),
+          actions: [
+            IconButton(
+              onPressed: () async {
+                final photoPath =
+                    await CameraGalleryServiceImpl().selectPhoto();
+
+                if (photoPath == null) return;
+              },
+              icon: const Icon(Icons.photo_library_outlined),
+            ),
+            IconButton(
+              onPressed: () async {
+                final photoPath = await CameraGalleryServiceImpl().takePhoto();
+
+                if (photoPath == null) return;
+              },
+              icon: const Icon(Icons.camera_alt_outlined),
+            ),
+          ],
         ),
         body: productState.isLoading
             ? const FullScreenLoader()
