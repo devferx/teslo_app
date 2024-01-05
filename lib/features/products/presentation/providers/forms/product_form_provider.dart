@@ -1,5 +1,6 @@
 import 'package:formz/formz.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+
 import 'package:teslo_shop/config/config.dart';
 import 'package:teslo_shop/features/products/domain/domain.dart';
 import 'package:teslo_shop/features/products/presentation/providers/providers.dart';
@@ -62,7 +63,7 @@ class ProductFormState {
       );
 }
 
-typedef ProductFormSubmitter = Future<Product> Function(
+typedef ProductFormSubmitter = Future<bool> Function(
     Map<String, dynamic> productLike);
 
 @riverpod
@@ -72,7 +73,7 @@ class ProductForm extends _$ProductForm {
   @override
   ProductFormState build(Product product) {
     _onSubmitCallback =
-        ref.watch(productsRepositoryProvider).createUpdateProduct;
+        ref.watch(productsProvider.notifier).createOrUpdateProduct;
 
     return ProductFormState(
       id: product.id,
@@ -111,8 +112,7 @@ class ProductForm extends _$ProductForm {
     };
 
     try {
-      await _onSubmitCallback(productLike);
-      return true;
+      return await _onSubmitCallback(productLike);
     } catch (e) {
       return false;
     }
