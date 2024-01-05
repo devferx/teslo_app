@@ -99,7 +99,7 @@ class ProductForm extends _$ProductForm {
       'stock': state.inStock.value,
       'sizes': state.sizes,
       'gender': state.gender,
-      'tags': state.tags.split(", "),
+      'tags': state.tags.split(","),
       'images': state.images
           .map((img) => img.replaceAll(
                 '${Environment.apiURl}/files/product/',
