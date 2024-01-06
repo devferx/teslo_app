@@ -105,8 +105,22 @@ class ProductsDatasourceImpl extends ProductsDataSource {
   }
 
   @override
-  Future<List<Product>> searchProductByTerm(String term) {
-    // TODO: implement searchProductByTerm
-    throw UnimplementedError();
+  Future<List<Product>> searchProductByTerm(String term) async {
+    try {
+      final response = await dio.get('/products/all/$term');
+      final List<Product> products = [];
+
+      for (final product in response.data ?? []) {
+        products.add(ProductMapper.jsonToEntity(product));
+      }
+
+      return products;
+    } on DioException catch (e) {
+      if (e.response!.statusCode == 404) throw ProductsNotFound();
+
+      throw Exception();
+    } catch (e) {
+      throw Exception();
+    }
   }
 }
