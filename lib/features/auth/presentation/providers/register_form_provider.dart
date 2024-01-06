@@ -1,5 +1,6 @@
 import 'package:formz/formz.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:teslo_shop/features/auth/presentation/providers/auth_provider.dart';
 import 'package:teslo_shop/features/shared/shared.dart';
 
 part 'register_form_provider.g.dart';
@@ -72,7 +73,11 @@ class RegisterForm extends _$RegisterForm {
 
     state = state.copyWith(isPosting: true);
 
-    await Future.delayed(Duration(seconds: 2));
+    await ref.read(authProvider.notifier).registerUser(
+          state.email.value,
+          state.password.value,
+          state.fullName.value,
+        );
 
     state = state.copyWith(isPosting: false, isFormPosted: true);
   }

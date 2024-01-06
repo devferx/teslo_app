@@ -61,7 +61,17 @@ class Auth extends _$Auth {
     }
   }
 
-  void registerUser(String email, String password) async {}
+  Future<void> registerUser(
+      String email, String password, String fullName) async {
+    try {
+      final user = await _authRepository.register(email, password, fullName);
+      _setLoggedUser(user);
+    } on CustomError catch (e) {
+      logout(e.message);
+    } catch (e) {
+      logout('Error no controlado');
+    }
+  }
 
   void checkAuthStatus() async {
     final token = await _keyValueStorageService.getValue<String>('token');
