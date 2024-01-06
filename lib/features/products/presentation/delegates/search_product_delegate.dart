@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:animate_do/animate_do.dart';
 
 import 'package:teslo_shop/features/products/domain/domain.dart';
 
@@ -11,6 +12,9 @@ class SearchProductDelegate extends SearchDelegate<Product?> {
   List<Product> initialProducts;
 
   StreamController<List<Product>> productsStream = StreamController.broadcast();
+  StreamController<bool> isLoadingStream = StreamController.broadcast();
+
+  Timer? _debounceTimer;
 
   SearchProductDelegate({
     required this.searchProducts,
@@ -20,9 +24,30 @@ class SearchProductDelegate extends SearchDelegate<Product?> {
   @override
   List<Widget>? buildActions(BuildContext context) {
     return [
-      IconButton(
-        onPressed: () => query = "",
-        icon: const Icon(Icons.clear),
+      StreamBuilder(
+        initialData: false,
+        stream: isLoadingStream.stream,
+        builder: (context, snapshot) {
+          if (snapshot.data ?? false) {
+            return SpinPerfect(
+              duration: const Duration(seconds: 20),
+              spins: 10,
+              infinite: true,
+              child: IconButton(
+                onPressed: () => query = "",
+                icon: const Icon(Icons.refresh_rounded),
+              ),
+            );
+          }
+
+          return FadeIn(
+            animate: query.isNotEmpty,
+            child: IconButton(
+              onPressed: () => query = "",
+              icon: const Icon(Icons.clear),
+            ),
+          );
+        },
       )
     ];
   }
@@ -31,6 +56,7 @@ class SearchProductDelegate extends SearchDelegate<Product?> {
   Widget? buildLeading(BuildContext context) {
     return IconButton(
       onPressed: () {
+        clearStreams();
         close(context, null);
       },
       icon: const Icon(Icons.arrow_back_ios_new_rounded),
@@ -49,12 +75,11 @@ class SearchProductDelegate extends SearchDelegate<Product?> {
   }
 
   Widget buildResultsAndSuggestions() {
-    final products = initialProducts;
-
     return StreamBuilder(
         stream: productsStream.stream,
         initialData: initialProducts,
         builder: (context, snapshot) {
+          final products = snapshot.data as List<Product>;
           return ListView.builder(
             itemBuilder: (context, index) {
               final product = products[index];
@@ -62,6 +87,7 @@ class SearchProductDelegate extends SearchDelegate<Product?> {
               return _SearchItem(
                 product: product,
                 onProductSelected: (context, product) {
+                  clearStreams();
                   close(context, product);
                 },
               );
@@ -72,9 +98,21 @@ class SearchProductDelegate extends SearchDelegate<Product?> {
   }
 
   void _onQueryChanged(String query) async {
-    final productsRes = await searchProducts(query);
-    initialProducts = productsRes;
-    productsStream.add(productsRes);
+    isLoadingStream.add(true);
+    if (_debounceTimer?.isActive ?? false) _debounceTimer?.cancel();
+
+    _debounceTimer = Timer(const Duration(milliseconds: 500), () async {
+      final productsRes = await searchProducts(query);
+
+      initialProducts = productsRes;
+
+      productsStream.add(productsRes);
+      isLoadingStream.add(false);
+    });
+  }
+
+  void clearStreams() {
+    productsStream.close();
   }
 }
 
@@ -94,12 +132,19 @@ class _SearchItem extends StatelessWidget {
         ListTile(
           leading: ClipRRect(
             borderRadius: BorderRadius.circular(10),
-            child: FadeInImage(
-              width: 50,
-              fit: BoxFit.cover,
-              placeholder: const AssetImage('assets/loaders/bottle-loader.gif'),
-              image: NetworkImage(product.images.first),
-            ),
+            child: product.images.isEmpty
+                ? Image.asset(
+                    'assets/images/no-image.jpg',
+                    width: 50,
+                    fit: BoxFit.cover,
+                  )
+                : FadeInImage(
+                    width: 50,
+                    fit: BoxFit.cover,
+                    placeholder:
+                        const AssetImage('assets/loaders/bottle-loader.gif'),
+                    image: NetworkImage(product.images.first),
+                  ),
           ),
           title: Text(product.title, style: const TextStyle()),
           subtitle: Text('Price: ${product.price}\$'),
