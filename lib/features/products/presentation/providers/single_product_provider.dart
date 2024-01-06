@@ -76,7 +76,9 @@ class SingleProduct extends _$SingleProduct {
         product: product,
       );
     } catch (e) {
-      print(e);
+      state = state.copyWith(
+        isLoading: false,
+      );
     }
   }
 }
