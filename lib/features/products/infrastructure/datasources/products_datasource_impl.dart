@@ -106,6 +106,8 @@ class ProductsDatasourceImpl extends ProductsDataSource {
 
   @override
   Future<List<Product>> searchProductByTerm(String term) async {
+    if (term.isEmpty) return [];
+
     try {
       final response = await dio.get('/products/all/$term');
       final List<Product> products = [];
@@ -116,7 +118,7 @@ class ProductsDatasourceImpl extends ProductsDataSource {
 
       return products;
     } on DioException catch (e) {
-      if (e.response!.statusCode == 404) throw ProductsNotFound();
+      if (e.response!.statusCode == 404) return [];
 
       throw Exception();
     } catch (e) {
